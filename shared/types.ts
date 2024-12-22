@@ -2,7 +2,7 @@ interface NoGameState {
   game: null
 }
 
-export type Team = 'uw' | 'rb'
+export type Team = 'mirran' | 'phyrexian'
 
 export type CardIdentity = Team | 'assassin' | 'neutral'
 

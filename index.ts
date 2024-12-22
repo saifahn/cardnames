@@ -27,7 +27,7 @@ function getRandomCards(requiredNum: number, names: string[]) {
   return [...cardnames]
 }
 
-const possibleTeams = ['uw', 'rb'] as const
+const possibleTeams = ['mirran', 'phyrexian'] as const
 
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
@@ -36,15 +36,15 @@ function createNewGame() {
   const currentTurn = goesFirst
 
   const cardsByIdentity = {
-    uw: goesFirst === 'uw' ? 9 : 8,
-    rb: goesFirst === 'rb' ? 9 : 8,
+    mirran: goesFirst === 'mirran' ? 9 : 8,
+    phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
     neutral: 7,
     assassin: 1,
   }
 
   const availableIdentities: CardIdentity[] = [
-    'uw',
-    'rb',
+    'mirran',
+    'phyrexian',
     'neutral',
     'assassin',
   ]
@@ -85,8 +85,8 @@ function createNewGame() {
     },
     guessesRemaining: 0,
     cardsRemaining: {
-      uw: goesFirst === 'uw' ? 9 : 8,
-      rb: goesFirst === 'rb' ? 9 : 8,
+      mirran: goesFirst === 'mirran' ? 9 : 8,
+      phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
     },
   }
   state.game = game
@@ -128,7 +128,7 @@ function guessCard(position: [number, number], name: string) {
   targetCard.flipped = true // this should happen no matter the next handling
 
   const currentTeam = state.game.currentTurn
-  const opposingTeam = currentTeam === 'uw' ? 'rb' : 'uw'
+  const opposingTeam = currentTeam === 'mirran' ? 'phyrexian' : 'mirran'
 
   if (targetCard.identity === currentTeam) {
     // send a message that can be picked up "correctly guessed!" or something?
@@ -152,7 +152,7 @@ function guessCard(position: [number, number], name: string) {
   if (targetCard.identity !== currentTeam) {
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
-    // send a message that can be picked up so we can say: e.g. "uw guessed a rb card!"
+    // send a message that can be picked up so we can say: e.g. "mirran guessed a phyrexian card!"
   }
 
   state.game.guessesRemaining = 0
@@ -184,7 +184,7 @@ function handlePassTurn() {
     return
   }
 
-  state.game.currentTurn = state.game.currentTurn === 'uw' ? 'rb' : 'uw'
+  state.game.currentTurn = state.game.currentTurn === 'mirran' ? 'phyrexian' : 'mirran'
   state.game.guessesRemaining = 0
   state.game.clue = { word: '', number: null }
 }
