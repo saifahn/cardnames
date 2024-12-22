@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gameState, guessCard } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
-  let { spymasterView }: { spymasterView: boolean } = $props();
+  let { spymasterView = false } = $props();
 
   const showGuessCardButton = $derived(
     gameState.game?.status === 'inProgress' && gameState.game?.clue.word && !spymasterView

@@ -1,14 +1,13 @@
 <script lang="ts">
-  import Board from './board.svelte';
-  import { createNewGame, gameState, passTurn, submitClue } from './gameState.svelte';
-  import TeamLogo from './teamLogo.svelte';
+  import Board from '$lib/board.svelte';
+  import GameReadyScreen from '$lib/gameReadyScreen.svelte';
+  import { gameState, submitClue } from '$lib/gameState.svelte';
+  import TeamLogo from '$lib/teamLogo.svelte';
 
   const NUMBER_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∞'] as const;
 
   let clueBeingInput = $state('');
   let selectedNumber: (typeof NUMBER_OPTIONS)[number] = $state('0');
-
-  let showingOperativeView = $state(true);
 
   function handleSubmit(e: Event) {
     e.preventDefault();
@@ -18,10 +17,12 @@
   }
 </script>
 
-<div class="mb-3 flex gap-4">
-  {#if gameState.game === null}
-    <p>Something went wrong - you shouldn't be here</p>
-  {:else}
+{#if gameState.game === null}
+  <p>Something went wrong - you shouldn't be here</p>
+{:else if gameState.game.status === 'ready'}
+  <GameReadyScreen />
+{:else}
+  <div class="mb-3 flex gap-4">
     <div class="border p-4">
       {#if gameState.game.lastAction === 'assassinChosen'}
         <h3 class="text-lg">
@@ -45,23 +46,7 @@
       <p>{gameState.game.cardsRemaining.phyrexian} cards to find</p>
     </div>
     <div class="border p-4">
-      {#if showingOperativeView}
-        {#if gameState.game.clue.word}
-          <h3>Current clue:</h3>
-          <p class="text-lg capitalize">
-            {gameState.game.clue.word}
-            {gameState.game.clue.number}
-          </p>
-          <button
-            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-            onclick={passTurn}
-          >
-            Pass turn
-          </button>
-        {:else}
-          <h3 class="text-lg">Waiting for clue</h3>
-        {/if}
-      {:else if !gameState.game.clue.word}
+      {#if !gameState.game.clue.word}
         <h3 class="text-lg">Waiting for your clue</h3>
         <form class="mt-2" onsubmit={handleSubmit}>
           <input
@@ -89,18 +74,6 @@
         <p class="text-lg capitalize">{gameState.game.clue.word} {gameState.game.clue.number}</p>
       {/if}
     </div>
-  {/if}
-</div>
-<Board spymasterView={!showingOperativeView} />
-<div class="mt-4 flex gap-2">
-  <button
-    class="rounded border border-rose-600 px-4 py-2 text-rose-300 hover:border-rose-700 hover:text-rose-400 active:border-rose-500"
-    onclick={createNewGame}>Reset and create new game</button
-  >
-  <button
-    class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-    onclick={() => (showingOperativeView = !showingOperativeView)}
-  >
-    Switch to {showingOperativeView ? 'Spymaster' : 'Operative'} view
-  </button>
-</div>
+  </div>
+  <Board spymasterView={true} />
+{/if}
