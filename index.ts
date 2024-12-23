@@ -3,6 +3,7 @@ import {
   BoardSpace,
   GameBaseState,
   CardIdentity,
+  Team,
 } from './shared/types'
 
 const state: GameState = {
@@ -28,6 +29,10 @@ function getRandomCards(requiredNum: number, names: string[]) {
 }
 
 const possibleTeams = ['mirran', 'phyrexian'] as const
+
+function getOpposingTeam(team: Team): Team {
+  return team === 'mirran' ? 'phyrexian' : 'mirran'
+}
 
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
@@ -115,20 +120,24 @@ function guessCard(position: [number, number], name: string) {
     console.error('The chosen card has already been chosen previously')
     return
   }
+
+  const currentTeam = state.game.currentTurn
+  const opposingTeam = getOpposingTeam(currentTeam)
+
   if (targetCard.identity === 'assassin') {
     console.log(
       `The assassin was chosen, ${state.game.currentTurn} has lost the game`
     )
     state.game.status = 'finished'
-    state.game.lastAction = 'assassinChosen'
+    state.game.details = {
+      status: 'gameOverAssassin',
+      team: currentTeam,
+    }
     // server needs to send the new data
     return
   }
 
   targetCard.flipped = true // this should happen no matter the next handling
-
-  const currentTeam = state.game.currentTurn
-  const opposingTeam = currentTeam === 'mirran' ? 'phyrexian' : 'mirran'
 
   if (targetCard.identity === currentTeam) {
     // send a message that can be picked up "correctly guessed!" or something?
@@ -140,7 +149,10 @@ function guessCard(position: [number, number], name: string) {
     }
     if (state.game.cardsRemaining[currentTeam] === 0) {
       state.game.status = 'finished'
-      state.game.lastAction = 'allOperativesFound'
+      state.game.details = {
+        status: 'gameOverOperatives',
+        team: currentTeam,
+      }
     }
     return
   }
@@ -184,7 +196,7 @@ function handlePassTurn() {
     return
   }
 
-  state.game.currentTurn = state.game.currentTurn === 'mirran' ? 'phyrexian' : 'mirran'
+  state.game.currentTurn = getOpposingTeam(state.game.currentTurn)
   state.game.guessesRemaining = 0
   state.game.clue = { word: '', number: null }
 }

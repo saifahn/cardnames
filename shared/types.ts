@@ -12,7 +12,56 @@ export interface BoardSpace {
   flipped: boolean
 }
 
-export type DetailedAction = 'assassinChosen' | 'allOperativesFound' | null
+type GameStartedStatus = {
+  status: 'gameStarted'
+  team: Team
+}
+
+type ClueStatusBase = {
+  clue: {
+    word: string
+    number: string | null
+  }
+  guessesRemaining: number
+  team: Team
+}
+
+type ClueGivenStatus = ClueStatusBase & {
+  status: 'clueGiven'
+}
+
+type CorrectGuessStatus = ClueStatusBase & {
+  status: 'correctGuess'
+}
+
+type GuessLimitReachedStatus = {
+  status: 'correctGuessLimitReached'
+  team: Team
+}
+
+type IncorrectGuessStatus = {
+  status: 'incorrectGuess'
+  team: Team
+}
+
+type GameOverAssassinStatus = {
+  status: 'gameOverAssassin'
+  team: Team
+}
+
+type GameOverOperatives = {
+  status: 'gameOverOperatives'
+  team: Team
+}
+
+type Details =
+  | GameStartedStatus
+  | ClueGivenStatus
+  | CorrectGuessStatus
+  | GuessLimitReachedStatus
+  | IncorrectGuessStatus
+  | GameOverAssassinStatus
+  | GameOverOperatives
 
 export interface GameBaseState {
   board: BoardSpace[][]
@@ -27,7 +76,7 @@ export interface GameBaseState {
   cardsRemaining: {
     [key in Team]: number
   }
-  lastAction?: DetailedAction
+  details?: Details
   // add logged in users and users by team
 }
 

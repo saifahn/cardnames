@@ -24,13 +24,13 @@
 {:else}
   <div class="mb-3 flex gap-4">
     <div class="border p-4">
-      {#if gameState.game.lastAction === 'assassinChosen'}
+      {#if gameState.game.details?.status === 'gameOverAssassin'}
         <h3 class="text-lg">
-          {gameState.game.currentTurn} has chosen the assassin and lost the game
+          {gameState.game.details.team} has chosen the assassin and lost the game
         </h3>
-      {:else if gameState.game.lastAction === 'allOperativesFound'}
+      {:else if gameState.game.details?.status === 'gameOverOperatives'}
         <h3 class="text-lg">
-          {gameState.game.currentTurn} have found all of their cards and won the game
+          {gameState.game.details.team} have found all of their cards and won the game
         </h3>
       {:else}
         <h3 class="text-lg">Current turn:</h3>
