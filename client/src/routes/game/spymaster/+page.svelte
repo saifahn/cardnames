@@ -1,8 +1,8 @@
 <script lang="ts">
   import Board from '$lib/board.svelte';
+  import GameInfoSection from '$lib/gameInfoSection.svelte';
   import GameReadyScreen from '$lib/gameReadyScreen.svelte';
   import { gameState, submitClue } from '$lib/gameState.svelte';
-  import TeamLogo from '$lib/teamLogo.svelte';
 
   const NUMBER_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∞'] as const;
 
@@ -23,28 +23,7 @@
   <GameReadyScreen />
 {:else}
   <div class="mb-3 flex gap-4">
-    <div class="border p-4">
-      {#if gameState.game.details?.status === 'gameOverAssassin'}
-        <h3 class="text-lg">
-          {gameState.game.details.team} has chosen the assassin and lost the game
-        </h3>
-      {:else if gameState.game.details?.status === 'gameOverOperatives'}
-        <h3 class="text-lg">
-          {gameState.game.details.team} have found all of their cards and won the game
-        </h3>
-      {:else}
-        <h3 class="text-lg">Current turn:</h3>
-        <TeamLogo team={gameState.game.currentTurn} />
-      {/if}
-    </div>
-    <div class="border p-4">
-      <TeamLogo team="mirran" />
-      <p>{gameState.game.cardsRemaining.mirran} cards to find</p>
-    </div>
-    <div class="border p-4">
-      <TeamLogo team="phyrexian" />
-      <p>{gameState.game.cardsRemaining.phyrexian} cards to find</p>
-    </div>
+    <GameInfoSection />
     <div class="border p-4">
       {#if !gameState.game.clue.word}
         <h3 class="text-lg">Waiting for your clue</h3>
