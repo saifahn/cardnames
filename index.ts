@@ -181,9 +181,12 @@ function guessCard(position: [number, number], name: string) {
       identityPicked: 'neutral',
     }
     state.game.currentTurn = opposingTeam
-    // server needs to send the new data
+    state.game.guessesRemaining = 0
+    state.game.clue = { word: '', number: null }
+    return
   }
-  if (targetCard.identity !== currentTeam) {
+
+  if (targetCard.identity === opposingTeam) {
     state.game.details = {
       status: 'incorrectGuess',
       team: currentTeam,
@@ -191,10 +194,10 @@ function guessCard(position: [number, number], name: string) {
     }
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
+    state.game.guessesRemaining = 0
+    state.game.clue = { word: '', number: null }
+    return
   }
-
-  state.game.guessesRemaining = 0
-  state.game.clue = { word: '', number: null }
 }
 
 function handleClueSubmission(clue: GameBaseState['clue']) {
