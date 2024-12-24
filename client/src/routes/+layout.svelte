@@ -1,21 +1,22 @@
 <script lang="ts">
-  import { wsConnect } from '$lib/gameState.svelte';
+  import { gameState, wsConnect } from '$lib/gameState.svelte';
   import { onMount } from 'svelte';
   import '../app.css';
   let { children } = $props();
 
-  let isLoading = $state(true);
+  let isConnected = $state(false);
+  let isLoaded = $derived(isConnected && gameState);
 
   onMount(() => {
     wsConnect();
-    isLoading = false;
+    isConnected = true;
   });
 </script>
 
 <main>
   <div class="container mx-auto">
-    {#if isLoading}
-      <p>Loading...</p>
+    {#if !isLoaded}
+      <p>Connecting to server...</p>
     {:else}
       {@render children()}
     {/if}

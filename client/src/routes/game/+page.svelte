@@ -1,8 +1,8 @@
 <script lang="ts">
   import Board from '$lib/board.svelte';
+  import GameInfoSection from '$lib/gameInfoSection.svelte';
   import GameReadyScreen from '$lib/gameReadyScreen.svelte';
   import { gameState, passTurn } from '$lib/gameState.svelte';
-  import TeamLogo from '$lib/teamLogo.svelte';
 </script>
 
 {#if gameState.game === null}
@@ -11,28 +11,7 @@
   <GameReadyScreen />
 {:else}
   <div class="mb-3 flex gap-4">
-    <div class="border p-4">
-      {#if gameState.game.lastAction === 'assassinChosen'}
-        <h3 class="text-lg">
-          {gameState.game.currentTurn} has chosen the assassin and lost the game
-        </h3>
-      {:else if gameState.game.lastAction === 'allOperativesFound'}
-        <h3 class="text-lg">
-          {gameState.game.currentTurn} have found all of their cards and won the game
-        </h3>
-      {:else}
-        <h3 class="text-lg">Current turn:</h3>
-        <TeamLogo team={gameState.game.currentTurn} />
-      {/if}
-    </div>
-    <div class="border p-4">
-      <TeamLogo team="mirran" />
-      <p>{gameState.game.cardsRemaining.mirran} cards to find</p>
-    </div>
-    <div class="border p-4">
-      <TeamLogo team="phyrexian" />
-      <p>{gameState.game.cardsRemaining.phyrexian} cards to find</p>
-    </div>
+    <GameInfoSection />
     <div class="border p-4">
       {#if gameState.game.clue.word}
         <h3>Current clue:</h3>
@@ -40,12 +19,14 @@
           {gameState.game.clue.word}
           {gameState.game.clue.number}
         </p>
-        <button
-          class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-          onclick={passTurn}
-        >
-          Pass turn
-        </button>
+        {#if gameState.game.details.status !== 'gameOverAssassin' && gameState.game.details.status !== 'gameOverOperatives' && gameState.game.status !== 'finished'}
+          <button
+            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+            onclick={passTurn}
+          >
+            Pass turn
+          </button>
+        {/if}
       {:else}
         <h3 class="text-lg">Waiting for clue</h3>
       {/if}

@@ -36,7 +36,6 @@ export function wsConnect() {
     const message = JSON.parse(event.data);
 
     if (isGameState(message)) {
-      // TODO: add different messages on each guess for more information
       gameState.game = message.game;
     }
   };
