@@ -103,6 +103,10 @@ function startGame() {
     return
   }
   state.game.status = 'inProgress'
+  state.game.details = {
+    status: 'gameStarted',
+    team: state.game.goesFirst,
+  }
 }
 
 // how to handle errors?
@@ -133,38 +137,60 @@ function guessCard(position: [number, number], name: string) {
       status: 'gameOverAssassin',
       team: currentTeam,
     }
-    // server needs to send the new data
     return
   }
 
   targetCard.flipped = true // this should happen no matter the next handling
 
   if (targetCard.identity === currentTeam) {
-    // send a message that can be picked up "correctly guessed!" or something?
     state.game.cardsRemaining[currentTeam] -= 1
     state.game.guessesRemaining -= 1
+
     if (state.game.guessesRemaining === 0) {
+      state.game.details = {
+        status: 'correctGuessLimitReached',
+        team: currentTeam,
+      }
       state.game.clue = { word: '', number: null }
       state.game.currentTurn = opposingTeam
+      return
     }
+
     if (state.game.cardsRemaining[currentTeam] === 0) {
       state.game.status = 'finished'
       state.game.details = {
         status: 'gameOverOperatives',
         team: currentTeam,
       }
+      return
+    }
+
+    state.game.details = {
+      status: 'correctGuess',
+      team: currentTeam,
+      clue: state.game.clue,
+      guessesRemaining: state.game.guessesRemaining,
     }
     return
   }
 
   if (targetCard.identity === 'neutral') {
+    state.game.details = {
+      status: 'incorrectGuess',
+      team: currentTeam,
+      identityPicked: 'neutral',
+    }
     state.game.currentTurn = opposingTeam
     // server needs to send the new data
   }
   if (targetCard.identity !== currentTeam) {
+    state.game.details = {
+      status: 'incorrectGuess',
+      team: currentTeam,
+      identityPicked: opposingTeam,
+    }
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
-    // send a message that can be picked up so we can say: e.g. "mirran guessed a phyrexian card!"
   }
 
   state.game.guessesRemaining = 0
@@ -188,12 +214,24 @@ function handleClueSubmission(clue: GameBaseState['clue']) {
     return
   }
   state.game.guessesRemaining = parseInt(clue.number, 10) + 1
+
+  state.game.details = {
+    status: 'clueGiven',
+    clue,
+    guessesRemaining: state.game.guessesRemaining,
+    team: state.game.currentTurn,
+  }
 }
 
 function handlePassTurn() {
   if (!state.game) {
     console.error('Someone tried to pass the turn with no game in progress')
     return
+  }
+
+  state.game.details = {
+    status: 'turnPassed',
+    team: state.game.currentTurn,
   }
 
   state.game.currentTurn = getOpposingTeam(state.game.currentTurn)

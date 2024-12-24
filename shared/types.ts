@@ -41,6 +41,7 @@ type GuessLimitReachedStatus = {
 
 type IncorrectGuessStatus = {
   status: 'incorrectGuess'
+  identityPicked: 'neutral' | Team
   team: Team
 }
 
@@ -49,8 +50,13 @@ type GameOverAssassinStatus = {
   team: Team
 }
 
-type GameOverOperatives = {
+type GameOverOperativesStatus = {
   status: 'gameOverOperatives'
+  team: Team
+}
+
+type TurnPassedStatus = {
+  status: 'turnPassed'
   team: Team
 }
 
@@ -61,7 +67,8 @@ type Details =
   | GuessLimitReachedStatus
   | IncorrectGuessStatus
   | GameOverAssassinStatus
-  | GameOverOperatives
+  | GameOverOperativesStatus
+  | TurnPassedStatus
 
 export interface GameBaseState {
   board: BoardSpace[][]
@@ -76,7 +83,7 @@ export interface GameBaseState {
   cardsRemaining: {
     [key in Team]: number
   }
-  details?: Details
+  details: Details
   // add logged in users and users by team
 }
 

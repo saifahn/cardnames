@@ -19,12 +19,14 @@
           {gameState.game.clue.word}
           {gameState.game.clue.number}
         </p>
-        <button
-          class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-          onclick={passTurn}
-        >
-          Pass turn
-        </button>
+        {#if gameState.game.details.status !== 'gameOverAssassin' && gameState.game.details.status !== 'gameOverOperatives' && gameState.game.status !== 'finished'}
+          <button
+            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+            onclick={passTurn}
+          >
+            Pass turn
+          </button>
+        {/if}
       {:else}
         <h3 class="text-lg">Waiting for clue</h3>
       {/if}
