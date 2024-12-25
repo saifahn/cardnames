@@ -7,6 +7,9 @@
   const NUMBER_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∞'] as const;
 
   let clueBeingInput = $state('');
+  function upperCaseSetClue(clue: string) {
+    clueBeingInput = clue.toUpperCase();
+  }
   let selectedNumber: (typeof NUMBER_OPTIONS)[number] = $state('0');
 
   function handleSubmit(e: Event) {
@@ -32,7 +35,7 @@
             type="text"
             class="rounded-lg border border-slate-200 bg-transparent p-2"
             placeholder="Enter your clue"
-            bind:value={clueBeingInput}
+            bind:value={() => clueBeingInput, upperCaseSetClue}
           />
           <select
             class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-200 bg-transparent px-4 py-2 pr-8 hover:border-slate-300 focus:outline-none"
