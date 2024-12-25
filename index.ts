@@ -84,10 +84,6 @@ function createNewGame() {
   const game: GameBaseState = {
     board,
     currentTurn,
-    clue: {
-      word: '',
-      number: null,
-    },
     guessesRemaining: 0,
     cardsRemaining: {
       mirran: mirranCards,
@@ -116,6 +112,10 @@ function startGame() {
 function guessCard(position: [number, number], name: string) {
   if (!state.game) {
     console.error('A card was guessed when there was no game')
+    return
+  }
+  if (!('clue' in state.game.details)) {
+    console.error('A card was guessed when there was no clue')
     return
   }
   const targetCard = state.game.board[position[0]][position[1]]
@@ -161,7 +161,6 @@ function guessCard(position: [number, number], name: string) {
         status: 'correctGuessLimitReached',
         team: currentTeam,
       }
-      state.game.clue = { word: '', number: null }
       state.game.currentTurn = opposingTeam
       return
     }
@@ -169,7 +168,7 @@ function guessCard(position: [number, number], name: string) {
     state.game.details = {
       status: 'correctGuess',
       team: currentTeam,
-      clue: state.game.clue,
+      clue: state.game.details.clue,
       guessesRemaining: state.game.guessesRemaining,
     }
     return
@@ -183,7 +182,6 @@ function guessCard(position: [number, number], name: string) {
     }
     state.game.currentTurn = opposingTeam
     state.game.guessesRemaining = 0
-    state.game.clue = { word: '', number: null }
     return
   }
 
@@ -196,12 +194,11 @@ function guessCard(position: [number, number], name: string) {
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
     state.game.guessesRemaining = 0
-    state.game.clue = { word: '', number: null }
     return
   }
 }
 
-function handleClueSubmission(clue: GameBaseState['clue']) {
+function handleClueSubmission(clue: { word: string; number: string }) {
   if (!state.game) {
     console.error('A clue was submitted when there was no game')
     return
@@ -218,7 +215,6 @@ function handleClueSubmission(clue: GameBaseState['clue']) {
     state.game.guessesRemaining = parseInt(clue.number, 10) + 1
   }
 
-  state.game.clue = clue
   state.game.details = {
     status: 'clueGiven',
     clue,
@@ -240,7 +236,6 @@ function handlePassTurn() {
 
   state.game.currentTurn = getOpposingTeam(state.game.currentTurn)
   state.game.guessesRemaining = 0
-  state.game.clue = { word: '', number: null }
 }
 
 function getCurrentGameState() {
@@ -313,11 +308,6 @@ const server = Bun.serve({
         if (action === 'guessCard') {
           if (!gameState) {
             console.error('guess action was received when there was no game')
-            return
-          }
-
-          if (!gameState.clue.word || !gameState.clue.number) {
-            console.error('guess action was received when there was no clue')
             return
           }
 

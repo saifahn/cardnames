@@ -1,12 +1,10 @@
 <script lang="ts">
-  import type { BoardSpace } from '../../../shared/types';
+  import { detailsHaveClue, type BoardSpace } from '../../../shared/types';
   import { gameState, guessCard } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
   let { spymasterView = false } = $props();
 
-  const showGuessCardButton = $derived(
-    gameState.game?.details && 'clue' in gameState.game?.details && !spymasterView
-  );
+  const showGuessCardButton = $derived(detailsHaveClue(gameState.game?.details) && !spymasterView);
 
   function borderBasedOnCard(card: BoardSpace) {
     if (card.flipped) {

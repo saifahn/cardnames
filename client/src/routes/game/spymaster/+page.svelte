@@ -2,7 +2,7 @@
   import Board from '$lib/board.svelte';
   import GameInfoSection from '$lib/gameInfoSection.svelte';
   import GameReadyScreen from '$lib/gameReadyScreen.svelte';
-  import { gameState, submitClue } from '$lib/gameState.svelte';
+  import { gameState, isWaitingForClue, submitClue } from '$lib/gameState.svelte';
 
   const NUMBER_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∞'] as const;
 
@@ -27,8 +27,8 @@
 {:else}
   <div class="mb-3 flex gap-4">
     <GameInfoSection />
-    <div class="border p-4">
-      {#if !gameState.game.clue.word}
+    {#if isWaitingForClue(gameState.game.details)}
+      <div class="border p-4">
         <h3 class="text-lg">Waiting for your clue</h3>
         <form class="mt-2" onsubmit={handleSubmit}>
           <input
@@ -51,11 +51,8 @@
             Submit
           </button>
         </form>
-      {:else}
-        <h3>Current clue:</h3>
-        <p class="text-lg capitalize">{gameState.game.clue.word} {gameState.game.clue.number}</p>
-      {/if}
-    </div>
+      </div>
+    {/if}
   </div>
   <Board spymasterView={true} />
 {/if}
