@@ -1,6 +1,8 @@
 <script lang="ts">
   import { gameState, startGame } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
+
+  const { spymasterView = false } = $props();
 </script>
 
 <div>
@@ -12,22 +14,43 @@
   </div>
   <div class="mb-3 flex gap-4">
     <div class="border p-4">
-      <span class="block w-20">
-        <TeamLogo team={gameState.game!.goesFirst} /> will go first and have 9 cards to find.
+      <span class="flex w-20">
+        <TeamLogo team={gameState.game!.goesFirst} />
       </span>
+      will go first and have 9 cards to find.
     </div>
     <div class="border p-4">
-      <span class="block w-20">
-        <TeamLogo team={gameState.game!.goesFirst === 'mirran' ? 'phyrexian' : 'mirran'} /> will go second
-        and have 8 cards to find.
+      <span class="flex w-20">
+        <TeamLogo team={gameState.game!.goesFirst === 'mirran' ? 'phyrexian' : 'mirran'} />
       </span>
+      will go second and have 8 cards to find.
+    </div>
+    <div class="border p-4">
+      <h3>Your current role:</h3>
+      <p class="text-xl font-semibold">{spymasterView ? 'Spymaster' : 'Operative'}</p>
     </div>
   </div>
   <div class="mb-3">
-    <ol>
+    <ol class="list-inside list-decimal">
       <li>Decide your teams</li>
       <li>Decide your spymasters</li>
-      <a href="/game/spymaster">Spymasters click here this link</a>
+      <ul class="list-inside list-disc pl-6">
+        {#if spymasterView}
+          <li>
+            If you will stop being the spymaster for your team, press <a
+              href="/game"
+              class="text-indigo-500 underline dark:text-indigo-300">this operative link</a
+            >
+          </li>
+        {:else}
+          <li>
+            If you are the spymaster for your team, press <a
+              href="/game/spymaster"
+              class="text-indigo-500 underline dark:text-indigo-300">this spymaster link</a
+            >
+          </li>
+        {/if}
+      </ul>
     </ol>
   </div>
   <div>
