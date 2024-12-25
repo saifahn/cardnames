@@ -78,7 +78,6 @@ type Details =
 
 export interface GameBaseState {
   board: BoardSpace[][]
-  goesFirst: Team
   currentTurn: Team
   clue: {
     word: string

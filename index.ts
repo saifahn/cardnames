@@ -37,12 +37,14 @@ function getOpposingTeam(team: Team): Team {
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
   const cards = getRandomCards(25, cardnamesArray)
-  const goesFirst = possibleTeams[Math.floor(Math.random() * 2)]
-  const currentTurn = goesFirst
+  const currentTurn = possibleTeams[Math.floor(Math.random() * 2)]
+
+  const mirranCards = currentTurn === 'mirran' ? 9 : 8
+  const phyrexianCards = currentTurn === 'phyrexian' ? 9 : 8
 
   const cardsByIdentity = {
-    mirran: goesFirst === 'mirran' ? 9 : 8,
-    phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
+    mirran: mirranCards,
+    phyrexian: phyrexianCards,
     neutral: 7,
     assassin: 1,
   }
@@ -81,7 +83,6 @@ function createNewGame() {
 
   const game: GameBaseState = {
     board,
-    goesFirst,
     currentTurn,
     clue: {
       word: '',
@@ -89,12 +90,12 @@ function createNewGame() {
     },
     guessesRemaining: 0,
     cardsRemaining: {
-      mirran: goesFirst === 'mirran' ? 9 : 8,
-      phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
+      mirran: mirranCards,
+      phyrexian: phyrexianCards,
     },
     details: {
       status: 'gameReady',
-      team: goesFirst,
+      team: currentTurn,
     },
   }
   state.game = game
@@ -107,7 +108,7 @@ function startGame() {
   }
   state.game.details = {
     status: 'gameStarted',
-    team: state.game.goesFirst,
+    team: state.game.currentTurn,
   }
 }
 

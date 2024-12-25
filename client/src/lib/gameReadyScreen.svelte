@@ -15,13 +15,13 @@
   <div class="mb-3 flex gap-4">
     <div class="border p-4">
       <span class="flex w-20">
-        <TeamLogo team={gameState.game!.goesFirst} />
+        <TeamLogo team={gameState.game!.currentTurn} />
       </span>
       will go first and have 9 cards to find.
     </div>
     <div class="border p-4">
       <span class="flex w-20">
-        <TeamLogo team={gameState.game!.goesFirst === 'mirran' ? 'phyrexian' : 'mirran'} />
+        <TeamLogo team={gameState.game!.currentTurn === 'mirran' ? 'phyrexian' : 'mirran'} />
       </span>
       will go second and have 8 cards to find.
     </div>

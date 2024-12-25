@@ -19,7 +19,7 @@
           {gameState.game.clue.word}
           {gameState.game.clue.number}
         </p>
-        {#if gameState.game.details.status !== 'gameOverAssassin' && gameState.game.details.status !== 'gameOverOperatives' && gameState.game.status !== 'finished'}
+        {#if gameState.game.details.status !== 'gameOverAssassin' && gameState.game.details.status !== 'gameOverOperatives'}
           <button
             class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
             onclick={passTurn}
