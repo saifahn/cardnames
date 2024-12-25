@@ -16,7 +16,7 @@
       case 'clueGiven':
         return `Clue given by the ${gameDetails.team} spymaster: ${gameDetails.clue.word} ${gameDetails.clue.number}`;
       case 'correctGuess':
-        return `Correct guess by the ${gameDetails.team} team. You have ${gameDetails.guessesRemaining} guesses remaining.`;
+        return `Correct guess by the ${gameDetails.team} team. You have ${gameDetails.guessesRemaining > 10 ? 'unlimited' : gameDetails.guessesRemaining} guesses remaining.`;
       case 'correctGuessLimitReached':
         return `Correct guess by the ${gameDetails.team} team. You have used all of your guesses for this turn. It is now the ${gameState.game.currentTurn}'s turn.`;
       case 'incorrectGuess':

@@ -81,7 +81,6 @@ export type Details =
 export interface GameBaseState {
   board: BoardSpace[][]
   currentTurn: Team
-  guessesRemaining: number
   cardsRemaining: {
     [key in Team]: number
   }

@@ -84,7 +84,6 @@ function createNewGame() {
   const game: GameBaseState = {
     board,
     currentTurn,
-    guessesRemaining: 0,
     cardsRemaining: {
       mirran: mirranCards,
       phyrexian: phyrexianCards,
@@ -146,7 +145,7 @@ function guessCard(position: [number, number], name: string) {
 
   if (targetCard.identity === currentTeam) {
     state.game.cardsRemaining[currentTeam] -= 1
-    state.game.guessesRemaining -= 1
+    const guessesRemaining = state.game.details.guessesRemaining - 1
 
     if (state.game.cardsRemaining[currentTeam] === 0) {
       state.game.details = {
@@ -156,7 +155,7 @@ function guessCard(position: [number, number], name: string) {
       return
     }
 
-    if (state.game.guessesRemaining === 0) {
+    if (guessesRemaining - 1 === 0) {
       state.game.details = {
         status: 'correctGuessLimitReached',
         team: currentTeam,
@@ -169,7 +168,7 @@ function guessCard(position: [number, number], name: string) {
       status: 'correctGuess',
       team: currentTeam,
       clue: state.game.details.clue,
-      guessesRemaining: state.game.guessesRemaining,
+      guessesRemaining,
     }
     return
   }
@@ -181,7 +180,6 @@ function guessCard(position: [number, number], name: string) {
       identityPicked: 'neutral',
     }
     state.game.currentTurn = opposingTeam
-    state.game.guessesRemaining = 0
     return
   }
 
@@ -193,7 +191,6 @@ function guessCard(position: [number, number], name: string) {
     }
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
-    state.game.guessesRemaining = 0
     return
   }
 }
@@ -209,16 +206,16 @@ function handleClueSubmission(clue: { word: string; number: string }) {
     return
   }
 
+  let guessesRemaining = parseInt(clue.number, 10) + 1
+
   if (clue.number === '0' || clue.number === '∞') {
-    state.game.guessesRemaining = 999
-  } else {
-    state.game.guessesRemaining = parseInt(clue.number, 10) + 1
+    guessesRemaining = 999
   }
 
   state.game.details = {
     status: 'clueGiven',
     clue,
-    guessesRemaining: state.game.guessesRemaining,
+    guessesRemaining,
     team: state.game.currentTurn,
   }
 }
@@ -235,7 +232,6 @@ function handlePassTurn() {
   }
 
   state.game.currentTurn = getOpposingTeam(state.game.currentTurn)
-  state.game.guessesRemaining = 0
 }
 
 function getCurrentGameState() {
