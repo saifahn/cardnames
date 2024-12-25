@@ -1,6 +1,10 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import type { GameState } from '../../../shared/types';
 
+let wsConnected = $state(false);
+
+export const getWSConnected = () => wsConnected;
+
 let wsConnection: WebSocket | undefined = $state();
 export const gameState: GameState = $state({ game: null });
 
@@ -22,9 +26,10 @@ export function wsConnect() {
     console.log('connected to server');
     const loginRequestMessage = {
       action: 'login',
-      username: 'svelteKit'
+      username: 'cardnamesClient'
     };
     wsConnection!.send(JSON.stringify(loginRequestMessage));
+    wsConnected = true;
   };
 
   wsConnection.onmessage = (event) => {
