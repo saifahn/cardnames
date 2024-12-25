@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameState } from './gameState.svelte';
+  import { createNewGame, gameState } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
 
   const waitingForClueText = 'Waiting for the spymaster to give a clue.';
@@ -41,6 +41,14 @@
       <h3 class="text-lg">
         {detailsText}
       </h3>
+      {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
+        <button
+          class="rounded border border-rose-600 px-4 py-2 text-rose-300 hover:border-rose-700 hover:text-rose-400 active:border-rose-500"
+          onclick={createNewGame}
+        >
+          Reset and create new game
+        </button>
+      {/if}
     </div>
     <div class="border p-4">
       <TeamLogo team="mirran" />
