@@ -21,7 +21,7 @@
 </script>
 
 <h1 class="text-3xl font-bold">Welcome to Cardnames!</h1>
-{#if gameState.game === null || gameState.game.status === 'finished'}
+{#if gameState.game === null || gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
   <div class="mb-4 flex items-center gap-2 bg-slate-200 p-4 dark:bg-slate-700">
     <p class="flex-grow">
       There is no game currently in progress. Would you like to create a new game?
@@ -33,7 +33,7 @@
       Create game
     </button>
   </div>
-{:else if gameState.game.status === 'ready'}
+{:else if gameState.game.details.status === 'gameReady'}
   <p class="flex-grow">
     There is a game waiting to be started. Click the button below to start and join the game.
   </p>

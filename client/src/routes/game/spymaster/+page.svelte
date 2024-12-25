@@ -2,11 +2,14 @@
   import Board from '$lib/board.svelte';
   import GameInfoSection from '$lib/gameInfoSection.svelte';
   import GameReadyScreen from '$lib/gameReadyScreen.svelte';
-  import { gameState, submitClue } from '$lib/gameState.svelte';
+  import { gameState, isWaitingForClue, submitClue } from '$lib/gameState.svelte';
 
   const NUMBER_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∞'] as const;
 
   let clueBeingInput = $state('');
+  function upperCaseSetClue(clue: string) {
+    clueBeingInput = clue.toUpperCase();
+  }
   let selectedNumber: (typeof NUMBER_OPTIONS)[number] = $state('0');
 
   function handleSubmit(e: Event) {
@@ -19,20 +22,21 @@
 
 {#if gameState.game === null}
   <p>Something went wrong - you shouldn't be here</p>
-{:else if gameState.game.status === 'ready'}
-  <GameReadyScreen />
+  <a href="/" class="mt-2 text-indigo-500 underline dark:text-indigo-300">Go to the home page</a>
+{:else if gameState.game.details.status === 'gameReady'}
+  <GameReadyScreen spymasterView={true} />
 {:else}
-  <div class="mb-3 flex gap-4">
+  <div class="mb-4">
     <GameInfoSection />
-    <div class="border p-4">
-      {#if !gameState.game.clue.word}
+    {#if isWaitingForClue(gameState.game.details)}
+      <div class="border p-4">
         <h3 class="text-lg">Waiting for your clue</h3>
         <form class="mt-2" onsubmit={handleSubmit}>
           <input
             type="text"
             class="rounded-lg border border-slate-200 bg-transparent p-2"
             placeholder="Enter your clue"
-            bind:value={clueBeingInput}
+            bind:value={() => clueBeingInput, upperCaseSetClue}
           />
           <select
             class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-200 bg-transparent px-4 py-2 pr-8 hover:border-slate-300 focus:outline-none"
@@ -48,11 +52,8 @@
             Submit
           </button>
         </form>
-      {:else}
-        <h3>Current clue:</h3>
-        <p class="text-lg capitalize">{gameState.game.clue.word} {gameState.game.clue.number}</p>
-      {/if}
-    </div>
+      </div>
+    {/if}
   </div>
   <Board spymasterView={true} />
 {/if}

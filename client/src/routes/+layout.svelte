@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { gameState, wsConnect } from '$lib/gameState.svelte';
+  import { getWSConnected, wsConnect } from '$lib/gameState.svelte';
   import { onMount } from 'svelte';
   import '../app.css';
+  import 'mana-font';
   let { children } = $props();
 
-  let isConnected = $state(false);
-  let isLoaded = $derived(isConnected && gameState);
+  let isLoaded = $derived(getWSConnected());
 
   onMount(() => {
     wsConnect();
-    isConnected = true;
   });
 </script>
 

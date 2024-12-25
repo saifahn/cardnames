@@ -1,5 +1,9 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
-import type { GameState } from '../../../shared/types';
+import type { Details, GameState } from '../../../shared/types';
+
+let wsConnected = $state(false);
+
+export const getWSConnected = () => wsConnected;
 
 let wsConnection: WebSocket | undefined = $state();
 export const gameState: GameState = $state({ game: null });
@@ -22,9 +26,10 @@ export function wsConnect() {
     console.log('connected to server');
     const loginRequestMessage = {
       action: 'login',
-      username: 'svelteKit'
+      username: 'cardnamesClient'
     };
     wsConnection!.send(JSON.stringify(loginRequestMessage));
+    wsConnected = true;
   };
 
   wsConnection.onmessage = (event) => {
@@ -88,4 +93,13 @@ export function guessCard(position: [number, number], name: string) {
   const wsConnection = getWsConnection();
   if (!wsConnection) return;
   wsConnection.send(JSON.stringify({ action: 'guessCard', position, name }));
+}
+
+export function isWaitingForClue(gameDetails: Details) {
+  return (
+    gameDetails.status === 'gameStarted' ||
+    gameDetails.status === 'correctGuessLimitReached' ||
+    gameDetails.status === 'incorrectGuess' ||
+    gameDetails.status === 'turnPassed'
+  );
 }

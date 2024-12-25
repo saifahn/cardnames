@@ -37,12 +37,14 @@ function getOpposingTeam(team: Team): Team {
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
   const cards = getRandomCards(25, cardnamesArray)
-  const goesFirst = possibleTeams[Math.floor(Math.random() * 2)]
-  const currentTurn = goesFirst
+  const currentTurn = possibleTeams[Math.floor(Math.random() * 2)]
+
+  const mirranCards = currentTurn === 'mirran' ? 9 : 8
+  const phyrexianCards = currentTurn === 'phyrexian' ? 9 : 8
 
   const cardsByIdentity = {
-    mirran: goesFirst === 'mirran' ? 9 : 8,
-    phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
+    mirran: mirranCards,
+    phyrexian: phyrexianCards,
     neutral: 7,
     assassin: 1,
   }
@@ -81,17 +83,14 @@ function createNewGame() {
 
   const game: GameBaseState = {
     board,
-    goesFirst,
     currentTurn,
-    status: 'ready',
-    clue: {
-      word: '',
-      number: null,
-    },
-    guessesRemaining: 0,
     cardsRemaining: {
-      mirran: goesFirst === 'mirran' ? 9 : 8,
-      phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
+      mirran: mirranCards,
+      phyrexian: phyrexianCards,
+    },
+    details: {
+      status: 'gameReady',
+      team: currentTurn,
     },
   }
   state.game = game
@@ -102,17 +101,20 @@ function startGame() {
     console.error('A game start was triggered before a game was created')
     return
   }
-  state.game.status = 'inProgress'
   state.game.details = {
     status: 'gameStarted',
-    team: state.game.goesFirst,
+    team: state.game.currentTurn,
   }
 }
 
 // how to handle errors?
 function guessCard(position: [number, number], name: string) {
-  if (state.game?.status !== 'inProgress') {
-    console.error('A card was guessed when there was no game in progress')
+  if (!state.game) {
+    console.error('A card was guessed when there was no game')
+    return
+  }
+  if (!('clue' in state.game.details)) {
+    console.error('A card was guessed when there was no clue')
     return
   }
   const targetCard = state.game.board[position[0]][position[1]]
@@ -127,12 +129,13 @@ function guessCard(position: [number, number], name: string) {
 
   const currentTeam = state.game.currentTurn
   const opposingTeam = getOpposingTeam(currentTeam)
+  targetCard.flipped = true
 
   if (targetCard.identity === 'assassin') {
     console.log(
       `The assassin was chosen, ${state.game.currentTurn} has lost the game`
     )
-    state.game.status = 'finished'
+
     state.game.details = {
       status: 'gameOverAssassin',
       team: currentTeam,
@@ -140,24 +143,11 @@ function guessCard(position: [number, number], name: string) {
     return
   }
 
-  targetCard.flipped = true // this should happen no matter the next handling
-
   if (targetCard.identity === currentTeam) {
     state.game.cardsRemaining[currentTeam] -= 1
-    state.game.guessesRemaining -= 1
-
-    if (state.game.guessesRemaining === 0) {
-      state.game.details = {
-        status: 'correctGuessLimitReached',
-        team: currentTeam,
-      }
-      state.game.clue = { word: '', number: null }
-      state.game.currentTurn = opposingTeam
-      return
-    }
+    const guessesRemaining = state.game.details.guessesRemaining - 1
 
     if (state.game.cardsRemaining[currentTeam] === 0) {
-      state.game.status = 'finished'
       state.game.details = {
         status: 'gameOverOperatives',
         team: currentTeam,
@@ -165,11 +155,20 @@ function guessCard(position: [number, number], name: string) {
       return
     }
 
+    if (guessesRemaining - 1 === 0) {
+      state.game.details = {
+        status: 'correctGuessLimitReached',
+        team: currentTeam,
+      }
+      state.game.currentTurn = opposingTeam
+      return
+    }
+
     state.game.details = {
       status: 'correctGuess',
       team: currentTeam,
-      clue: state.game.clue,
-      guessesRemaining: state.game.guessesRemaining,
+      clue: state.game.details.clue,
+      guessesRemaining,
     }
     return
   }
@@ -181,8 +180,6 @@ function guessCard(position: [number, number], name: string) {
       identityPicked: 'neutral',
     }
     state.game.currentTurn = opposingTeam
-    state.game.guessesRemaining = 0
-    state.game.clue = { word: '', number: null }
     return
   }
 
@@ -194,13 +191,11 @@ function guessCard(position: [number, number], name: string) {
     }
     state.game.currentTurn = opposingTeam
     state.game.cardsRemaining[opposingTeam] -= 1
-    state.game.guessesRemaining = 0
-    state.game.clue = { word: '', number: null }
     return
   }
 }
 
-function handleClueSubmission(clue: GameBaseState['clue']) {
+function handleClueSubmission(clue: { word: string; number: string }) {
   if (!state.game) {
     console.error('A clue was submitted when there was no game')
     return
@@ -211,17 +206,16 @@ function handleClueSubmission(clue: GameBaseState['clue']) {
     return
   }
 
-  state.game.clue = clue
-  if (state.game.clue.number === '0' || state.game.clue.number === '∞') {
-    state.game.guessesRemaining = 999
-    return
+  let guessesRemaining = parseInt(clue.number, 10) + 1
+
+  if (clue.number === '0' || clue.number === '∞') {
+    guessesRemaining = 999
   }
-  state.game.guessesRemaining = parseInt(clue.number, 10) + 1
 
   state.game.details = {
     status: 'clueGiven',
     clue,
-    guessesRemaining: state.game.guessesRemaining,
+    guessesRemaining,
     team: state.game.currentTurn,
   }
 }
@@ -238,8 +232,6 @@ function handlePassTurn() {
   }
 
   state.game.currentTurn = getOpposingTeam(state.game.currentTurn)
-  state.game.guessesRemaining = 0
-  state.game.clue = { word: '', number: null }
 }
 
 function getCurrentGameState() {
@@ -277,38 +269,41 @@ const server = Bun.serve({
         const gameState = getCurrentGameState()
 
         if (action === 'login') {
-          console.log(`LOG: ${parsedMsg.username} has logged in`)
+          console.log(
+            `a client has connected - random UUID: ${crypto.randomUUID()}`
+          )
           socket.send(JSON.stringify(state))
         }
 
         if (action === 'createNewGame') {
           createNewGame()
+          console.log('a new game has been created')
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'startGame') {
           startGame()
+          console.log('a game has been started')
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'submitClue') {
           handleClueSubmission(parsedMsg.clue)
+          console.log(
+            `a clue has been received: ${parsedMsg.clue.word} ${parsedMsg.clue.number}`
+          )
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'passTurn') {
           handlePassTurn()
+          console.log('the turn was passed')
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'guessCard') {
           if (!gameState) {
             console.error('guess action was received when there was no game')
-            return
-          }
-
-          if (!gameState.clue.word || !gameState.clue.number) {
-            console.error('guess action was received when there was no clue')
             return
           }
 
