@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { createNewGame, gameState } from './gameState.svelte';
+  import { detailsHaveClue } from '../../../shared/types';
+  import { createNewGame, gameState, passTurn } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
 
   const waitingForClueText = 'Waiting for the spymaster to give a clue.';
@@ -33,30 +34,42 @@
   });
 </script>
 
-<section class="flex gap-2">
+<section class="mb-2">
   {#if gameState.game === null}
     <p>Something went wrong - you shouldn't be here</p>
   {:else}
-    <div class="border p-4">
-      <h3 class="text-lg">
-        {detailsText}
-      </h3>
-      {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
-        <button
-          class="rounded border border-rose-600 px-4 py-2 text-rose-300 hover:border-rose-700 hover:text-rose-400 active:border-rose-500"
-          onclick={createNewGame}
-        >
-          Reset and create new game
-        </button>
-      {/if}
+    <div class="mb-2">
+      <div class="border p-4">
+        <h3 class="text-lg">
+          {detailsText}
+        </h3>
+        {#if detailsHaveClue(gameState.game.details)}
+          <button
+            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+            onclick={passTurn}
+          >
+            Pass turn
+          </button>
+        {/if}
+        {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
+          <button
+            class="rounded border border-rose-600 px-4 py-2 text-rose-300 hover:border-rose-700 hover:text-rose-400 active:border-rose-500"
+            onclick={createNewGame}
+          >
+            Reset and create new game
+          </button>
+        {/if}
+      </div>
     </div>
-    <div class="border p-4">
-      <TeamLogo team="mirran" />
-      <p>{gameState.game.cardsRemaining.mirran} cards to find</p>
-    </div>
-    <div class="border p-4">
-      <TeamLogo team="phyrexian" />
-      <p>{gameState.game.cardsRemaining.phyrexian} cards to find</p>
+    <div class="flex gap-2">
+      <div class="border p-4">
+        <TeamLogo team="mirran" />
+        <p>{gameState.game.cardsRemaining.mirran} cards to find</p>
+      </div>
+      <div class="border p-4">
+        <TeamLogo team="phyrexian" />
+        <p>{gameState.game.cardsRemaining.phyrexian} cards to find</p>
+      </div>
     </div>
   {/if}
 </section>

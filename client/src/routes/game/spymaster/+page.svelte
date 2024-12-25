@@ -25,7 +25,7 @@
 {:else if gameState.game.details.status === 'gameReady'}
   <GameReadyScreen spymasterView={true} />
 {:else}
-  <div class="mb-3 flex gap-4">
+  <div class="mb-4">
     <GameInfoSection />
     {#if isWaitingForClue(gameState.game.details)}
       <div class="border p-4">
