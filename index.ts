@@ -129,19 +129,19 @@ function guessCard(position: [number, number], name: string) {
 
   const currentTeam = state.game.currentTurn
   const opposingTeam = getOpposingTeam(currentTeam)
+  targetCard.flipped = true
 
   if (targetCard.identity === 'assassin') {
     console.log(
       `The assassin was chosen, ${state.game.currentTurn} has lost the game`
     )
+
     state.game.details = {
       status: 'gameOverAssassin',
       team: currentTeam,
     }
     return
   }
-
-  targetCard.flipped = true // this should happen no matter the next handling
 
   if (targetCard.identity === currentTeam) {
     state.game.cardsRemaining[currentTeam] -= 1
