@@ -5,7 +5,7 @@
   let { spymasterView = false } = $props();
 
   const showGuessCardButton = $derived(
-    gameState.game?.status === 'inProgress' && gameState.game?.clue.word && !spymasterView
+    gameState.game?.details && 'clue' in gameState.game?.details && !spymasterView
   );
 
   function borderBasedOnCard(card: BoardSpace) {

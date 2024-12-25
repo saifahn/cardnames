@@ -7,7 +7,7 @@
 
 {#if gameState.game === null}
   <p>Something went wrong - you shouldn't be here</p>
-{:else if gameState.game.status === 'ready'}
+{:else if gameState.game.details.status === 'gameReady'}
   <GameReadyScreen />
 {:else}
   <div class="mb-3 flex gap-4">

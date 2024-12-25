@@ -83,7 +83,6 @@ function createNewGame() {
     board,
     goesFirst,
     currentTurn,
-    status: 'ready',
     clue: {
       word: '',
       number: null,
@@ -92,6 +91,10 @@ function createNewGame() {
     cardsRemaining: {
       mirran: goesFirst === 'mirran' ? 9 : 8,
       phyrexian: goesFirst === 'phyrexian' ? 9 : 8,
+    },
+    details: {
+      status: 'gameReady',
+      team: goesFirst,
     },
   }
   state.game = game
@@ -102,7 +105,6 @@ function startGame() {
     console.error('A game start was triggered before a game was created')
     return
   }
-  state.game.status = 'inProgress'
   state.game.details = {
     status: 'gameStarted',
     team: state.game.goesFirst,
@@ -111,8 +113,8 @@ function startGame() {
 
 // how to handle errors?
 function guessCard(position: [number, number], name: string) {
-  if (state.game?.status !== 'inProgress') {
-    console.error('A card was guessed when there was no game in progress')
+  if (!state.game) {
+    console.error('A card was guessed when there was no game')
     return
   }
   const targetCard = state.game.board[position[0]][position[1]]
@@ -132,7 +134,6 @@ function guessCard(position: [number, number], name: string) {
     console.log(
       `The assassin was chosen, ${state.game.currentTurn} has lost the game`
     )
-    state.game.status = 'finished'
     state.game.details = {
       status: 'gameOverAssassin',
       team: currentTeam,
@@ -147,7 +148,6 @@ function guessCard(position: [number, number], name: string) {
     state.game.guessesRemaining -= 1
 
     if (state.game.cardsRemaining[currentTeam] === 0) {
-      state.game.status = 'finished'
       state.game.details = {
         status: 'gameOverOperatives',
         team: currentTeam,

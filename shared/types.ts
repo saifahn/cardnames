@@ -12,6 +12,11 @@ export interface BoardSpace {
   flipped: boolean
 }
 
+type GameReadyStatus = {
+  status: 'gameReady'
+  team: Team
+}
+
 type GameStartedStatus = {
   status: 'gameStarted'
   team: Team
@@ -61,6 +66,7 @@ type TurnPassedStatus = {
 }
 
 type Details =
+  | GameReadyStatus
   | GameStartedStatus
   | ClueGivenStatus
   | CorrectGuessStatus
@@ -74,7 +80,6 @@ export interface GameBaseState {
   board: BoardSpace[][]
   goesFirst: Team
   currentTurn: Team
-  status: 'ready' | 'inProgress' | 'finished'
   clue: {
     word: string
     number: string | null
