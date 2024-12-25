@@ -146,6 +146,15 @@ function guessCard(position: [number, number], name: string) {
     state.game.cardsRemaining[currentTeam] -= 1
     state.game.guessesRemaining -= 1
 
+    if (state.game.cardsRemaining[currentTeam] === 0) {
+      state.game.status = 'finished'
+      state.game.details = {
+        status: 'gameOverOperatives',
+        team: currentTeam,
+      }
+      return
+    }
+
     if (state.game.guessesRemaining === 0) {
       state.game.details = {
         status: 'correctGuessLimitReached',
@@ -153,15 +162,6 @@ function guessCard(position: [number, number], name: string) {
       }
       state.game.clue = { word: '', number: null }
       state.game.currentTurn = opposingTeam
-      return
-    }
-
-    if (state.game.cardsRemaining[currentTeam] === 0) {
-      state.game.status = 'finished'
-      state.game.details = {
-        status: 'gameOverOperatives',
-        team: currentTeam,
-      }
       return
     }
 
@@ -211,13 +211,13 @@ function handleClueSubmission(clue: GameBaseState['clue']) {
     return
   }
 
-  state.game.clue = clue
-  if (state.game.clue.number === '0' || state.game.clue.number === '∞') {
+  if (clue.number === '0' || clue.number === '∞') {
     state.game.guessesRemaining = 999
-    return
+  } else {
+    state.game.guessesRemaining = parseInt(clue.number, 10) + 1
   }
-  state.game.guessesRemaining = parseInt(clue.number, 10) + 1
 
+  state.game.clue = clue
   state.game.details = {
     status: 'clueGiven',
     clue,
@@ -277,27 +277,35 @@ const server = Bun.serve({
         const gameState = getCurrentGameState()
 
         if (action === 'login') {
-          console.log(`LOG: ${parsedMsg.username} has logged in`)
+          console.log(
+            `a client has connected - random UUID: ${crypto.randomUUID()}`
+          )
           socket.send(JSON.stringify(state))
         }
 
         if (action === 'createNewGame') {
           createNewGame()
+          console.log('a new game has been created')
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'startGame') {
           startGame()
+          console.log('a game has been started')
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'submitClue') {
           handleClueSubmission(parsedMsg.clue)
+          console.log(
+            `a clue has been received: ${parsedMsg.clue.word} ${parsedMsg.clue.number}`
+          )
           server.publish('game', JSON.stringify(state))
         }
 
         if (action === 'passTurn') {
           handlePassTurn()
+          console.log('the turn was passed')
           server.publish('game', JSON.stringify(state))
         }
 
