@@ -8,7 +8,7 @@
 
   function textColorBasedOnCard(card: BoardSpace) {
     if (card.flipped) {
-      if (card.identity === 'assassin') return 'text-slate-900';
+      if (card.identity === 'assassin') return 'text-indigo-700 dark:text-indigo-500';
       if (card.identity === 'neutral') return 'text-stone-500';
       if (card.identity === 'mirran') return 'text-sky-500';
       if (card.identity === 'phyrexian') return 'text-rose-500';
@@ -17,7 +17,7 @@
 
   function borderBasedOnCard(card: BoardSpace) {
     if (card.flipped) {
-      if (card.identity === 'assassin') return 'border-slate-900 border-2';
+      if (card.identity === 'assassin') return 'border-indigo-700 dark:border-indigo-500 border-2';
       if (card.identity === 'neutral') return 'border-stone-500 border-2';
       if (card.identity === 'mirran') return 'border-sky-500 border-2';
       if (card.identity === 'phyrexian') return 'border-rose-500 border-2';
@@ -29,7 +29,11 @@
 <div class="grid grid-cols-3 gap-2 md:grid-cols-5">
   {#each gameState.game!.board as row, rowIndex}
     {#each row as card, colIndex}
-      <div class="rounded-lg border p-4 {borderBasedOnCard(card)}">
+      <div
+        class="min-h-36 min-w-6 rounded-lg border p-3 {borderBasedOnCard(
+          card
+        )} align-center flex flex-col justify-center"
+      >
         <h4 class="mb-2 font-semibold {textColorBasedOnCard(card)} text-center">{card.word}</h4>
         {#if card.flipped || spymasterView}
           <span class="flex justify-center {textColorBasedOnCard(card)}">
