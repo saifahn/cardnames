@@ -1,15 +1,15 @@
 <script lang="ts">
-  import MirranWatermark from '$lib/assets/mirran.svg?raw';
-  import PhyrexianWatermark from '$lib/assets/phyrexian.svg?raw';
   import type { Team } from '../../../shared/types';
 
   const { team }: { team: Team | 'assassin' | 'neutral' } = $props();
 </script>
 
 {#if team === 'mirran'}
-  {@html MirranWatermark}
+  <i class="ms ms-watermark-mirran ms-4x"></i>
 {:else if team === 'phyrexian'}
-  {@html PhyrexianWatermark}
+  <i class="ms ms-watermark-phyrexian ms-4x"></i>
+{:else if team === 'assassin'}
+  <i class="ms ms-dfc-emrakul ms-4x"></i>
 {:else}
-  {team}
+  <i class="ms ms-token ms-4x"></i>
 {/if}

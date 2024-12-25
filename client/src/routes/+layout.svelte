@@ -2,6 +2,7 @@
   import { getWSConnected, wsConnect } from '$lib/gameState.svelte';
   import { onMount } from 'svelte';
   import '../app.css';
+  import 'mana-font';
   let { children } = $props();
 
   let isLoaded = $derived(getWSConnected());
