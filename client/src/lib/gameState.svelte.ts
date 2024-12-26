@@ -110,6 +110,7 @@ export function isWaitingForClue(gameDetails: Details) {
 export function isGameOver() {
   return (
     gameState.game?.details.status === 'gameOverEmrakul' ||
-    gameState.game?.details.status === 'gameOverAgents'
+    gameState.game?.details.status === 'gameOverAgents' ||
+    gameState.game?.details.status === 'gameOverAgentsMistake'
   );
 }

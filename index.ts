@@ -180,13 +180,21 @@ function guessCard(position: [number, number], name: string) {
   }
 
   if (targetCard.identity === opposingTeam) {
+    state.game.cardsRemaining[opposingTeam] -= 1
+    if (state.game.cardsRemaining[opposingTeam] === 0) {
+      state.game.details = {
+        status: 'gameOverAgents',
+        team: opposingTeam,
+      }
+      return
+    }
+
     state.game.details = {
       status: 'incorrectGuess',
       team: currentTeam,
       identityPicked: opposingTeam,
     }
     state.game.currentTurn = opposingTeam
-    state.game.cardsRemaining[opposingTeam] -= 1
     return
   }
 }

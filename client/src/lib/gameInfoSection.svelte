@@ -85,6 +85,15 @@
             All of the <InlineTeamLogo identity={gameState.game.details.team} /> cards have been chosen.
             They win the game!
           </p>
+        {:else if gameState.game.details.status === 'gameOverAgentsMistake'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.details.team} /> team incorrectly picked the
+            final <InlineTeamLogo identity={gameState.game.details.opposingTeam} /> card.
+          </p>
+          <p>
+            All of the <InlineTeamLogo identity={gameState.game.details.opposingTeam} /> cards have been
+            chosen. They win the game!
+          </p>
         {/if}
 
         {#if detailsHaveClue(gameState.game.details) && !spymasterView}
