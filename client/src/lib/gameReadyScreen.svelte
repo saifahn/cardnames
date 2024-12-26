@@ -3,6 +3,7 @@
   import { textColorBasedOnIdentity } from '$lib/colors.svelte';
   import { getOpposingTeam } from '../../../shared/getOpposingTeam';
   import TeamLogo from './teamLogo.svelte';
+  import InlineTeamLogo from './inlineTeamLogo.svelte';
 
   const { spymasterView = false } = $props();
 </script>
@@ -17,13 +18,9 @@
       > but with Magic: the Gathering cards.
     </li>
     <li>
-      The <span class="inline-flex items-baseline gap-1 font-semibold text-sky-500"
-        ><i class="ms ms-watermark-mirran"></i> Mirran</span
-      >
+      The <InlineTeamLogo team={'mirran'} />
       spymaster will be racing against the
-      <span class="inline-flex items-baseline gap-1 font-semibold text-rose-500">
-        <i class="ms ms-watermark-phyrexian"></i> Phyrexian
-      </span>
+      <InlineTeamLogo team={'phyrexian'} />
       spymaster to be the first to get their operatives in contact with their respective agents.
     </li>
     <li>
@@ -36,6 +33,10 @@
       <span class="inline-flex items-baseline gap-1 font-semibold text-stone-500"
         ><i class="ms ms-token"></i> Neutral</span
       > squirrel tokens will slow a team down, but are otherwise harmless.
+    </li>
+    <li>
+      One idea for a house rule: as an exception to the rule that clues must be one word, you can
+      give the whole name of a Magic card not on the board as a clue.
     </li>
     <li>
       Currently, the cards used for the game are taken from a Vintage Cube list in November 2024.
@@ -74,22 +75,24 @@
 
 <h2 class="mb-3 text-xl font-semibold">2. Decide the spymasters</h2>
 <div class="mb-6">
-  <p class="flex items-baseline gap-1">
+  <p class="mb-2 flex items-baseline gap-1">
     You are currently
-    <span class="text-lg font-medium">{spymasterView ? 'a Spymaster' : 'an Operative'}</span>
+    <span class="text-lg font-medium text-indigo-500 dark:text-indigo-300"
+      >{spymasterView ? 'a Spymaster' : 'an Operative'}</span
+    >
   </p>
   {#if spymasterView}
     <p>
-      If you will play as an operative this round, press <a
+      If you will play as an operative this round, <a
         href="/game"
-        class="text-indigo-500 underline dark:text-indigo-300">this operative link</a
+        class="text-indigo-500 underline dark:text-indigo-300">become an operative</a
       >
     </p>
   {:else}
     <p>
-      If you will play as the spymaster for your team this round, press <a
+      If you will play as the spymaster for your team this round, <a
         href="/game/spymaster"
-        class="text-indigo-500 underline dark:text-indigo-300">this spymaster link</a
+        class="text-indigo-500 underline dark:text-indigo-300">become a spymaster</a
       >
     </p>
   {/if}
