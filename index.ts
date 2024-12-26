@@ -42,14 +42,14 @@ function createNewGame() {
     mirran: mirranCards,
     phyrexian: phyrexianCards,
     neutral: 7,
-    assassin: 1,
+    emrakul: 1,
   }
 
   const availableIdentities: CardIdentity[] = [
     'mirran',
     'phyrexian',
     'neutral',
-    'assassin',
+    'emrakul',
   ]
 
   let row = 0
@@ -127,13 +127,13 @@ function guessCard(position: [number, number], name: string) {
   const opposingTeam = getOpposingTeam(currentTeam)
   targetCard.flipped = true
 
-  if (targetCard.identity === 'assassin') {
+  if (targetCard.identity === 'emrakul') {
     console.log(
-      `The assassin was chosen, ${state.game.currentTurn} has lost the game`
+      `Emrakul was chosen, ${state.game.currentTurn} has lost the game`
     )
 
     state.game.details = {
-      status: 'gameOverAssassin',
+      status: 'gameOverEmrakul',
       team: currentTeam,
     }
     return

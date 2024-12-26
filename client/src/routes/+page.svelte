@@ -21,7 +21,7 @@
 </script>
 
 <h1 class="mb-2 text-3xl font-bold">Welcome to Cardnames!</h1>
-{#if gameState.game === null || gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
+{#if gameState.game === null || gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverEmrakul'}
   <p class="mb-4 flex-grow">
     There is no game currently in progress. Would you like to create a new game?
   </p>

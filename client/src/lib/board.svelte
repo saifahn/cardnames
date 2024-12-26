@@ -15,7 +15,7 @@
 
   function borderBasedOnCard(card: BoardSpace) {
     if (card.flipped) {
-      if (card.identity === 'assassin') return 'border-indigo-700 dark:border-indigo-500 border-2';
+      if (card.identity === 'emrakul') return 'border-indigo-700 dark:border-indigo-500 border-2';
       if (card.identity === 'neutral') return 'border-stone-500 border-2';
       if (card.identity === 'mirran') return 'border-sky-500 border-2';
       if (card.identity === 'phyrexian') return 'border-rose-500 border-2';
@@ -33,7 +33,7 @@
         )} flex flex-col items-center justify-center"
       >
         <h4 class="mb-2 font-semibold {textColorBasedOnCard(card)} text-center">{card.word}</h4>
-        {#if gameState.game?.details.status === 'gameOverAssassin' || gameState.game?.details.status === 'gameOverOperatives' || card.flipped || spymasterView}
+        {#if gameState.game?.details.status === 'gameOverEmrakul' || gameState.game?.details.status === 'gameOverOperatives' || card.flipped || spymasterView}
           <span class="flex justify-center {textColorBasedOnCard(card)}">
             <TeamLogo team={card.identity} />
           </span>
