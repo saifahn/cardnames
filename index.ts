@@ -151,7 +151,7 @@ function guessCard(position: [number, number], name: string) {
       return
     }
 
-    if (guessesRemaining - 1 === 0) {
+    if (guessesRemaining === 0) {
       state.game.details = {
         status: 'correctGuessLimitReached',
         team: currentTeam,
