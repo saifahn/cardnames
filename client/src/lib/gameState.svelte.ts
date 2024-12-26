@@ -1,9 +1,11 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import type { Details, GameState } from '../../../shared/types';
 
-let wsConnected = $state(false);
+let isWSConnected = $state(false);
+let isGameStateLoaded = $state(false);
 
-export const getWSConnected = () => wsConnected;
+export const getWSConnectedStatus = () => isWSConnected;
+export const getGameStateLoadedStatus = () => isGameStateLoaded;
 
 let wsConnection: WebSocket | undefined = $state();
 export const gameState: GameState = $state({ game: null });
@@ -29,7 +31,7 @@ export function wsConnect() {
       username: 'cardnamesClient'
     };
     wsConnection!.send(JSON.stringify(loginRequestMessage));
-    wsConnected = true;
+    isWSConnected = true;
   };
 
   wsConnection.onmessage = (event) => {
@@ -42,6 +44,7 @@ export function wsConnect() {
 
     if (isGameState(message)) {
       gameState.game = message.game;
+      isGameStateLoaded = true;
     }
   };
 
