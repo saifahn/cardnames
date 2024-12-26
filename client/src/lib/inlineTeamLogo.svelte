@@ -1,11 +1,25 @@
 <script lang="ts">
-  import type { Team } from '../../../shared/types';
+  import type { CardIdentity } from '../../../shared/types';
   import { textColorBasedOnIdentity } from './colors.svelte';
 
-  const { team }: { team: Team } = $props();
+  const { identity }: { identity: CardIdentity } = $props();
+
+  const iconClass = $derived.by(() => {
+    switch (identity) {
+      case 'emrakul':
+        return 'ms-dfc-emrakul';
+      case 'mirran':
+        return 'ms-watermark-mirran';
+      case 'phyrexian':
+        return 'ms-watermark-phyrexian';
+      case 'neutral':
+        return 'ms-token';
+    }
+  });
 </script>
 
 <span
-  class="inline-flex items-baseline gap-1 font-semibold capitalize {textColorBasedOnIdentity(team)}"
-  ><i class="ms ms-watermark-{team}"></i>{team}</span
+  class="inline-flex items-baseline gap-1 font-semibold capitalize {textColorBasedOnIdentity(
+    identity
+  )}"><i class="ms {iconClass}"></i>{identity}</span
 >

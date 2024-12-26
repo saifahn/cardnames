@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getOpposingTeam } from '../../../shared/getOpposingTeam';
   import { detailsHaveClue, type CardIdentity } from '../../../shared/types';
   import { textColorBasedOnIdentity } from './colors.svelte';
   import { createNewGame, gameState, passTurn } from './gameState.svelte';
@@ -12,34 +13,6 @@
   function stylesIfCurrentTurn(identity: CardIdentity) {
     if (gameState.game?.currentTurn === identity) return textColorBasedOnIdentity(identity);
   }
-
-  const detailsText = $derived.by(() => {
-    if (!gameState.game) {
-      return "There's no game and no details text to display.";
-    }
-    const gameDetails = gameState.game.details;
-
-    switch (gameDetails.status) {
-      case 'gameStarted':
-        return `The game has started. It is now the ${gameState.game.currentTurn}'s turn. ${waitingForClueText}`;
-      case 'clueGiven':
-        return `Clue given by the ${gameDetails.team} spymaster: ${gameDetails.clue.word} ${gameDetails.clue.number}`;
-      case 'correctGuess':
-        return `Correct guess by the ${gameDetails.team} team. You have ${gameDetails.guessesRemaining > 10 ? 'unlimited' : gameDetails.guessesRemaining} guesses remaining.`;
-      case 'correctGuessLimitReached':
-        return `Correct guess by the ${gameDetails.team} team. You have used all of your guesses for this turn. It is now the ${gameState.game.currentTurn}'s turn.`;
-      case 'incorrectGuess':
-        return `Incorrect guess by the ${gameDetails.team} team. They picked a card with the ${gameDetails.identityPicked} identity. It is now the ${gameState.game.currentTurn}'s turn. ${waitingForClueText}`;
-      case 'turnPassed':
-        return `The ${gameDetails.team} team has passed their turn. It is now the ${gameState.game.currentTurn}'s turn. ${waitingForClueText}`;
-      case 'gameOverAssassin':
-        return `${gameDetails.team} has chosen the assassin and lost the game`;
-      case 'gameOverOperatives':
-        return `${gameDetails.team} have found all of their cards and won the game!`;
-      default:
-        return `Current turn: ${gameState.game.currentTurn}`;
-    }
-  });
 </script>
 
 <section class="rounded-lg border p-3 shadow-lg dark:border-slate-700">
@@ -52,29 +25,82 @@
         <p class="text-xl font-semibold">{gameState.game.cardsRemaining.mirran}</p>
       </div>
 
-      <div class="flex flex-grow flex-col items-center justify-center space-y-1 p-1">
+      <div class="flex flex-grow flex-col items-center justify-center gap-2 p-1">
         {#if gameState.game.details.status === 'gameStarted'}
           <p>
-            The game has started. It is now the <InlineTeamLogo team={gameState.game.currentTurn} />
+            The game has started. It is now the <InlineTeamLogo
+              identity={gameState.game.currentTurn}
+            />
             turn.
           </p>
           <p>
             {waitingForClueText}
           </p>
-        {:else}
-          <p>Implementing</p>
+        {:else if gameState.game.details.status === 'clueGiven'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.currentTurn} /> spymaster has given the clue:
+          </p>
+        {:else if gameState.game.details.status === 'correctGuess'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.currentTurn} /> team successfully contacted
+            one of their agents.
+          </p>
+          <p>
+            They have {gameState.game.details.clue.number === '0' ||
+            gameState.game.details.clue.number === '∞'
+              ? 'unlimited'
+              : gameState.game.details.guessesRemaining} guesses remaining.
+          </p>
+        {:else if gameState.game.details.status === 'correctGuessLimitReached'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.details.team} /> team successfully contacted
+            one of their agents.
+          </p>
+          <p>They have used all of their guesses for this turn.</p>
+          <p>It is now the <InlineTeamLogo identity={gameState.game.currentTurn} /> turn</p>
+        {:else if gameState.game.details.status === 'incorrectGuess'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.details.team} /> team incorrectly picked a <InlineTeamLogo
+              identity={gameState.game.details.identityPicked}
+            /> card.
+          </p>
+          <p>It is now the <InlineTeamLogo identity={gameState.game.currentTurn} /> turn.</p>
+          <p>{waitingForClueText}</p>
+        {:else if gameState.game.details.status === 'turnPassed'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.details.team} /> team has passed the turn.
+          </p>
+          <p>It is now the <InlineTeamLogo identity={gameState.game.currentTurn} /> turn.</p>
+          <p>{waitingForClueText}</p>
+        {:else if gameState.game.details.status === 'gameOverEmrakul'}
+          <p>
+            The <InlineTeamLogo identity={gameState.game.details.team} /> team has been led to Emrakul.
+          </p>
+          <p>
+            The <InlineTeamLogo identity={getOpposingTeam(gameState.game.details.team)} /> has won the
+            game!
+          </p>
+        {:else if gameState.game.details.status === 'gameOverOperatives'}
+          <p>
+            All of the <InlineTeamLogo identity={gameState.game.details.team} /> cards have been chosen.
+            They win the game!
+          </p>
         {/if}
 
         {#if detailsHaveClue(gameState.game.details) && !spymasterView}
+          <p class="text-xl font-medium">
+            {gameState.game.details.clue.word}
+            {gameState.game.details.clue.number}
+          </p>
           <button
-            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+            class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
             onclick={passTurn}
           >
             Pass turn
           </button>
         {/if}
 
-        {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverAssassin'}
+        {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverEmrakul'}
           <button
             class="rounded border border-rose-600 px-4 py-2 text-rose-500 hover:border-rose-700 hover:text-rose-600 active:border-rose-300 active:text-rose-200 dark:text-rose-300 dark:hover:text-rose-400"
             onclick={createNewGame}

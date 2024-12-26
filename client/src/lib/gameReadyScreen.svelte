@@ -18,21 +18,18 @@
       > but with Magic: the Gathering cards.
     </li>
     <li>
-      The <InlineTeamLogo team={'mirran'} />
+      The <InlineTeamLogo identity="mirran" />
       spymaster will be racing against the
-      <InlineTeamLogo team={'phyrexian'} />
+      <InlineTeamLogo identity="phyrexian" />
       spymaster to be the first to get their operatives in contact with their respective agents.
     </li>
     <li>
-      If a spymaster leads their operatives to <span
-        class="inline-flex items-baseline gap-1 font-semibold text-indigo-700 dark:text-indigo-500"
-        ><i class="ms ms-dfc-emrakul"></i> Emrakul</span
-      >, their team loses.
+      If a spymaster leads their operatives to <InlineTeamLogo identity="emrakul" />, their team
+      loses.
     </li>
     <li>
-      <span class="inline-flex items-baseline gap-1 font-semibold text-stone-500"
-        ><i class="ms ms-token"></i> Neutral</span
-      > squirrel tokens will slow a team down, but are otherwise harmless.
+      <InlineTeamLogo identity="neutral" /> squirrel tokens will slow a team down, but are otherwise
+      harmless.
     </li>
     <li>
       One idea for a house rule: as an exception to the rule that clues must be one word, you can
