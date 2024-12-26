@@ -26,34 +26,32 @@
 {:else if gameState.game.details.status === 'gameReady'}
   <GameReadyScreen spymasterView={true} />
 {:else}
-  <div class="mb-4">
-    <GameInfoSection />
-    {#if isWaitingForClue(gameState.game.details)}
-      <div class="border p-4">
-        <h3 class="text-lg">Waiting for your clue</h3>
-        <form class="mt-2" onsubmit={handleSubmit}>
-          <input
-            type="text"
-            class="rounded-lg border border-slate-200 bg-transparent p-2"
-            placeholder="Enter your clue"
-            bind:value={() => clueBeingInput, upperCaseSetClue}
-          />
-          <select
-            class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-200 bg-transparent px-4 py-2 pr-8 hover:border-slate-300 focus:outline-none"
-            bind:value={selectedNumber}
-          >
-            {#each NUMBER_OPTIONS as number}
-              <option>{number}</option>
-            {/each}
-          </select>
-          <button
-            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    {/if}
-  </div>
+  <GameInfoSection spymasterView={true} />
+  {#if isWaitingForClue(gameState.game.details)}
+    <div class="mt-2 rounded-lg border p-4 shadow-lg dark:border-slate-700">
+      <h3 class="text-lg">Waiting for your one word clue and number of associated cards</h3>
+      <form class="mt-2" onsubmit={handleSubmit}>
+        <input
+          type="text"
+          class="rounded-lg border border-slate-200 bg-transparent p-2"
+          placeholder="Enter your clue"
+          bind:value={() => clueBeingInput, upperCaseSetClue}
+        />
+        <select
+          class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-200 bg-transparent px-4 py-2 pr-8 hover:border-slate-300 focus:outline-none"
+          bind:value={selectedNumber}
+        >
+          {#each NUMBER_OPTIONS as number}
+            <option>{number}</option>
+          {/each}
+        </select>
+        <button
+          class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  {/if}
   <Board spymasterView={true} />
 {/if}

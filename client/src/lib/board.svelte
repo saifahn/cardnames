@@ -24,13 +24,13 @@
   }
 </script>
 
-<div class="grid grid-cols-3 gap-2 md:grid-cols-5">
+<div class="mt-4 grid grid-cols-3 gap-1 md:grid-cols-5">
   {#each gameState.game!.board as row, rowIndex}
     {#each row as card, colIndex}
       <div
-        class="min-h-36 min-w-6 rounded-md border p-3 {borderBasedOnCard(
+        class="min-h-36 rounded-xl border p-3 shadow-md dark:border-slate-700 {borderBasedOnCard(
           card
-        )} align-center flex flex-col justify-center"
+        )} flex flex-col items-center justify-center"
       >
         <h4 class="mb-2 font-semibold {textColorBasedOnCard(card)} text-center">{card.word}</h4>
         {#if gameState.game?.details.status === 'gameOverAssassin' || gameState.game?.details.status === 'gameOverOperatives' || card.flipped || spymasterView}

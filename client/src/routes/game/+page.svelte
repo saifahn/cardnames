@@ -11,8 +11,6 @@
 {:else if gameState.game.details.status === 'gameReady'}
   <GameReadyScreen />
 {:else}
-  <div class="mb-4">
-    <GameInfoSection />
-  </div>
+  <GameInfoSection />
   <Board />
 {/if}
