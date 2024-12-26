@@ -1,9 +1,9 @@
+import { getOpposingTeam } from './shared/getOpposingTeam'
 import {
   GameState,
   BoardSpace,
   GameBaseState,
   CardIdentity,
-  Team,
 } from './shared/types'
 
 const state: GameState = {
@@ -29,10 +29,6 @@ function getRandomCards(requiredNum: number, names: string[]) {
 }
 
 const possibleTeams = ['mirran', 'phyrexian'] as const
-
-function getOpposingTeam(team: Team): Team {
-  return team === 'mirran' ? 'phyrexian' : 'mirran'
-}
 
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
