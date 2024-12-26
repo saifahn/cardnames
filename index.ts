@@ -1,9 +1,9 @@
+import { getOpposingTeam } from './shared/getOpposingTeam'
 import {
   GameState,
   BoardSpace,
   GameBaseState,
   CardIdentity,
-  Team,
 } from './shared/types'
 
 const state: GameState = {
@@ -30,10 +30,6 @@ function getRandomCards(requiredNum: number, names: string[]) {
 
 const possibleTeams = ['mirran', 'phyrexian'] as const
 
-function getOpposingTeam(team: Team): Team {
-  return team === 'mirran' ? 'phyrexian' : 'mirran'
-}
-
 function createNewGame() {
   const board: BoardSpace[][] = [[], [], [], [], []]
   const cards = getRandomCards(25, cardnamesArray)
@@ -46,14 +42,14 @@ function createNewGame() {
     mirran: mirranCards,
     phyrexian: phyrexianCards,
     neutral: 7,
-    assassin: 1,
+    emrakul: 1,
   }
 
   const availableIdentities: CardIdentity[] = [
     'mirran',
     'phyrexian',
     'neutral',
-    'assassin',
+    'emrakul',
   ]
 
   let row = 0
@@ -131,13 +127,13 @@ function guessCard(position: [number, number], name: string) {
   const opposingTeam = getOpposingTeam(currentTeam)
   targetCard.flipped = true
 
-  if (targetCard.identity === 'assassin') {
+  if (targetCard.identity === 'emrakul') {
     console.log(
-      `The assassin was chosen, ${state.game.currentTurn} has lost the game`
+      `Emrakul was chosen, ${state.game.currentTurn} has lost the game`
     )
 
     state.game.details = {
-      status: 'gameOverAssassin',
+      status: 'gameOverEmrakul',
       team: currentTeam,
     }
     return
@@ -149,13 +145,13 @@ function guessCard(position: [number, number], name: string) {
 
     if (state.game.cardsRemaining[currentTeam] === 0) {
       state.game.details = {
-        status: 'gameOverOperatives',
+        status: 'gameOverAgents',
         team: currentTeam,
       }
       return
     }
 
-    if (guessesRemaining - 1 === 0) {
+    if (guessesRemaining === 0) {
       state.game.details = {
         status: 'correctGuessLimitReached',
         team: currentTeam,
@@ -184,13 +180,21 @@ function guessCard(position: [number, number], name: string) {
   }
 
   if (targetCard.identity === opposingTeam) {
+    state.game.cardsRemaining[opposingTeam] -= 1
+    if (state.game.cardsRemaining[opposingTeam] === 0) {
+      state.game.details = {
+        status: 'gameOverAgents',
+        team: opposingTeam,
+      }
+      return
+    }
+
     state.game.details = {
       status: 'incorrectGuess',
       team: currentTeam,
       identityPicked: opposingTeam,
     }
     state.game.currentTurn = opposingTeam
-    state.game.cardsRemaining[opposingTeam] -= 1
     return
   }
 }

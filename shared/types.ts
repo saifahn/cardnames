@@ -4,7 +4,7 @@ interface NoGameState {
 
 export type Team = 'mirran' | 'phyrexian'
 
-export type CardIdentity = Team | 'assassin' | 'neutral'
+export type CardIdentity = Team | 'emrakul' | 'neutral'
 
 export interface BoardSpace {
   word: string
@@ -50,14 +50,20 @@ type IncorrectGuessStatus = {
   team: Team
 }
 
-type GameOverAssassinStatus = {
-  status: 'gameOverAssassin'
+type GameOverEmrakulStatus = {
+  status: 'gameOverEmrakul'
   team: Team
 }
 
-type GameOverOperativesStatus = {
-  status: 'gameOverOperatives'
+type GameOverAgentsFound = {
+  status: 'gameOverAgents'
   team: Team
+}
+
+type GameOverAgentsFoundMistake = {
+  status: 'gameOverAgentsMistake'
+  team: Team
+  opposingTeam: Team
 }
 
 type TurnPassedStatus = {
@@ -74,8 +80,9 @@ export type Details =
   | CorrectGuessStatus
   | GuessLimitReachedStatus
   | IncorrectGuessStatus
-  | GameOverAssassinStatus
-  | GameOverOperativesStatus
+  | GameOverEmrakulStatus
+  | GameOverAgentsFound
+  | GameOverAgentsFoundMistake
   | TurnPassedStatus
 
 export interface GameBaseState {
