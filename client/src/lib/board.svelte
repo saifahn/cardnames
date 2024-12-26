@@ -20,7 +20,7 @@
       if (card.identity === 'mirran') return 'border-sky-500 border-2';
       if (card.identity === 'phyrexian') return 'border-rose-500 border-2';
     }
-    return 'border-slate-200';
+    return 'border-slate-200 dark:border-slate-700';
   }
 </script>
 
@@ -28,7 +28,7 @@
   {#each gameState.game!.board as row, rowIndex}
     {#each row as card, colIndex}
       <div
-        class="min-h-36 rounded-xl border p-3 shadow-sm dark:border-slate-700 dark:shadow-md {borderBasedOnCard(
+        class="min-h-36 rounded-xl border p-3 shadow-sm dark:shadow-md {borderBasedOnCard(
           card
         )} flex flex-col items-center justify-center"
       >
