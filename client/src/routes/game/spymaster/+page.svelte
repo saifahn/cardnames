@@ -28,17 +28,19 @@
 {:else}
   <GameInfoSection spymasterView={true} />
   {#if isWaitingForClue(gameState.game.details)}
-    <div class="mt-2 rounded-lg border p-4 shadow-lg dark:border-slate-700">
+    <div
+      class="mt-2 rounded-lg border border-slate-200 p-4 shadow-sm dark:border-slate-700 dark:shadow-lg"
+    >
       <h3 class="text-lg">Waiting for your one word clue and number of associated cards</h3>
       <form class="mt-2" onsubmit={handleSubmit}>
         <input
           type="text"
-          class="rounded-lg border border-slate-200 bg-transparent p-2"
+          class="rounded-lg border border-slate-300 bg-transparent p-2 dark:border-slate-600"
           placeholder="Enter your clue"
           bind:value={() => clueBeingInput, upperCaseSetClue}
         />
         <select
-          class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-200 bg-transparent px-4 py-2 pr-8 hover:border-slate-300 focus:outline-none"
+          class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-300 bg-transparent px-4 py-2 pr-8 hover:border-slate-400 focus:outline-none dark:border-slate-600"
           bind:value={selectedNumber}
         >
           {#each NUMBER_OPTIONS as number}

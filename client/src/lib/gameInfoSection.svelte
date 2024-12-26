@@ -15,7 +15,9 @@
   }
 </script>
 
-<section class="rounded-lg border p-3 shadow-lg dark:border-slate-700">
+<section
+  class="rounded-lg border border-slate-200 p-3 shadow-sm dark:border-slate-700 dark:shadow-lg"
+>
   {#if gameState.game === null}
     <p>Something went wrong - you shouldn't be here</p>
   {:else}
@@ -77,8 +79,8 @@
             The <InlineTeamLogo identity={gameState.game.details.team} /> team has been led to Emrakul.
           </p>
           <p>
-            The <InlineTeamLogo identity={getOpposingTeam(gameState.game.details.team)} /> has won the
-            game!
+            The <InlineTeamLogo identity={getOpposingTeam(gameState.game.details.team)} /> team has won
+            the game!
           </p>
         {:else if gameState.game.details.status === 'gameOverAgents'}
           <p>
@@ -96,17 +98,19 @@
           </p>
         {/if}
 
-        {#if detailsHaveClue(gameState.game.details) && !spymasterView}
+        {#if detailsHaveClue(gameState.game.details)}
           <p class="text-xl font-medium">
             {gameState.game.details.clue.word}
             {gameState.game.details.clue.number}
           </p>
-          <button
-            class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
-            onclick={passTurn}
-          >
-            Pass turn
-          </button>
+          {#if !spymasterView}
+            <button
+              class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+              onclick={passTurn}
+            >
+              Pass turn
+            </button>
+          {/if}
         {/if}
 
         {#if isGameOver()}

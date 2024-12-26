@@ -28,7 +28,7 @@
   {#each gameState.game!.board as row, rowIndex}
     {#each row as card, colIndex}
       <div
-        class="min-h-36 rounded-xl border p-3 shadow-md dark:border-slate-700 {borderBasedOnCard(
+        class="min-h-36 rounded-xl border p-3 shadow-sm dark:border-slate-700 dark:shadow-md {borderBasedOnCard(
           card
         )} flex flex-col items-center justify-center"
       >
