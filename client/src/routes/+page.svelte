@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameState, createNewGame } from '$lib/gameState.svelte';
+  import { gameState, createNewGame, isGameOver } from '$lib/gameState.svelte';
   import { goto } from '$app/navigation';
 
   async function enterGame() {
@@ -21,7 +21,7 @@
 </script>
 
 <h1 class="mb-2 text-3xl font-bold">Welcome to Cardnames!</h1>
-{#if gameState.game === null || gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverEmrakul'}
+{#if gameState.game === null || isGameOver()}
   <p class="mb-4 flex-grow">
     There is no game currently in progress. Would you like to create a new game?
   </p>

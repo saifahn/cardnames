@@ -2,7 +2,7 @@
   import { getOpposingTeam } from '../../../shared/getOpposingTeam';
   import { detailsHaveClue, type CardIdentity } from '../../../shared/types';
   import { textColorBasedOnIdentity } from './colors.svelte';
-  import { createNewGame, gameState, passTurn } from './gameState.svelte';
+  import { createNewGame, gameState, isGameOver, passTurn } from './gameState.svelte';
   import InlineTeamLogo from './inlineTeamLogo.svelte';
   import TeamLogo from './teamLogo.svelte';
 
@@ -80,7 +80,7 @@
             The <InlineTeamLogo identity={getOpposingTeam(gameState.game.details.team)} /> has won the
             game!
           </p>
-        {:else if gameState.game.details.status === 'gameOverOperatives'}
+        {:else if gameState.game.details.status === 'gameOverAgents'}
           <p>
             All of the <InlineTeamLogo identity={gameState.game.details.team} /> cards have been chosen.
             They win the game!
@@ -100,7 +100,7 @@
           </button>
         {/if}
 
-        {#if gameState.game.details.status === 'gameOverOperatives' || gameState.game.details.status === 'gameOverEmrakul'}
+        {#if isGameOver()}
           <button
             class="rounded border border-rose-600 px-4 py-2 text-rose-500 hover:border-rose-700 hover:text-rose-600 active:border-rose-300 active:text-rose-200 dark:text-rose-300 dark:hover:text-rose-400"
             onclick={createNewGame}

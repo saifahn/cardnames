@@ -55,8 +55,8 @@ type GameOverEmrakulStatus = {
   team: Team
 }
 
-type GameOverOperativesStatus = {
-  status: 'gameOverOperatives'
+type GameOverAgentsFound = {
+  status: 'gameOverAgents'
   team: Team
 }
 
@@ -75,7 +75,7 @@ export type Details =
   | GuessLimitReachedStatus
   | IncorrectGuessStatus
   | GameOverEmrakulStatus
-  | GameOverOperativesStatus
+  | GameOverAgentsFound
   | TurnPassedStatus
 
 export interface GameBaseState {

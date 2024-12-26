@@ -145,7 +145,7 @@ function guessCard(position: [number, number], name: string) {
 
     if (state.game.cardsRemaining[currentTeam] === 0) {
       state.game.details = {
-        status: 'gameOverOperatives',
+        status: 'gameOverAgents',
         team: currentTeam,
       }
       return

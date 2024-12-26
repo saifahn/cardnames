@@ -106,3 +106,10 @@ export function isWaitingForClue(gameDetails: Details) {
     gameDetails.status === 'turnPassed'
   );
 }
+
+export function isGameOver() {
+  return (
+    gameState.game?.details.status === 'gameOverEmrakul' ||
+    gameState.game?.details.status === 'gameOverAgents'
+  );
+}

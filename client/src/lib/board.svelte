@@ -1,7 +1,7 @@
 <script lang="ts">
   import { detailsHaveClue, type BoardSpace } from '../../../shared/types';
   import { textColorBasedOnIdentity } from './colors.svelte';
-  import { gameState, guessCard } from './gameState.svelte';
+  import { gameState, guessCard, isGameOver } from './gameState.svelte';
   import TeamLogo from './teamLogo.svelte';
   let { spymasterView = false } = $props();
 
@@ -33,7 +33,7 @@
         )} flex flex-col items-center justify-center"
       >
         <h4 class="mb-2 font-semibold {textColorBasedOnCard(card)} text-center">{card.word}</h4>
-        {#if gameState.game?.details.status === 'gameOverEmrakul' || gameState.game?.details.status === 'gameOverOperatives' || card.flipped || spymasterView}
+        {#if isGameOver() || card.flipped || spymasterView}
           <span class="flex justify-center {textColorBasedOnCard(card)}">
             <TeamLogo team={card.identity} />
           </span>
