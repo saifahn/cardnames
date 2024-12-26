@@ -33,7 +33,7 @@
         )} align-center flex flex-col justify-center"
       >
         <h4 class="mb-2 font-semibold {textColorBasedOnCard(card)} text-center">{card.word}</h4>
-        {#if card.flipped || spymasterView}
+        {#if gameState.game?.details.status === 'gameOverAssassin' || gameState.game?.details.status === 'gameOverOperatives' || card.flipped || spymasterView}
           <span class="flex justify-center {textColorBasedOnCard(card)}">
             <TeamLogo team={card.identity} />
           </span>
