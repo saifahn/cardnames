@@ -40,7 +40,7 @@
         {/if}
         {#if showGuessCardButton && !card.flipped}
           <button
-            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+            class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400 dark:border-slate-600"
             onclick={() => guessCard([rowIndex, colIndex], card.word)}
           >
             Guess card

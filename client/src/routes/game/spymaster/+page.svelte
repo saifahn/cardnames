@@ -35,12 +35,12 @@
       <form class="mt-2" onsubmit={handleSubmit}>
         <input
           type="text"
-          class="rounded-lg border border-slate-300 bg-transparent p-2 dark:border-slate-600"
+          class="rounded-lg border border-slate-300 bg-transparent p-2 hover:border-slate-500 dark:border-slate-600"
           placeholder="Enter your clue"
           bind:value={() => clueBeingInput, upperCaseSetClue}
         />
         <select
-          class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-300 bg-transparent px-4 py-2 pr-8 hover:border-slate-400 focus:outline-none dark:border-slate-600"
+          class="focus:shadow-outline inline appearance-none rounded-lg border border-slate-300 bg-transparent px-4 py-2 pr-8 hover:border-slate-500 focus:outline-none dark:border-slate-600"
           bind:value={selectedNumber}
         >
           {#each NUMBER_OPTIONS as number}
@@ -48,7 +48,7 @@
           {/each}
         </select>
         <button
-          class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+          class="mt-2 rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400 dark:border-slate-600"
         >
           Submit
         </button>

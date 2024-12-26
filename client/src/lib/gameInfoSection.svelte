@@ -105,7 +105,7 @@
           </p>
           {#if !spymasterView}
             <button
-              class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400"
+              class="rounded border px-4 py-2 hover:border-slate-500 active:border-slate-400 active:text-slate-400 dark:border-slate-600"
               onclick={passTurn}
             >
               Pass turn
