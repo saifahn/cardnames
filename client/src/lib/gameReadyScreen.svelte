@@ -8,7 +8,7 @@
 </script>
 
 <h1 class="mb-3 text-2xl font-bold">Cardnames overview</h1>
-<div class="mb-5 rounded-md border p-4">
+<div class="mb-8 rounded-md border p-4">
   <ul class="list-inside list-disc space-y-1.5">
     <li>
       <a
@@ -43,8 +43,8 @@
   </ul>
 </div>
 
-<h2 class="mb-3 text-xl font-semibold">1. Decide the teams</h2>
-<div class="mb-2 flex items-center gap-1 px-2">
+<h2 class="mb-4 text-xl font-semibold">1. Decide the teams</h2>
+<div class="mb-4 flex flex-wrap items-center gap-1 px-2">
   <span class="flex items-center gap-2 {textColorBasedOnIdentity(gameState.game!.currentTurn)}">
     <h3 class="text-lg font-medium">
       The
@@ -54,7 +54,7 @@
   </span>
   <p>will go first and have 9 agents to find.</p>
 </div>
-<div class="mb-6 flex items-center gap-1 px-2">
+<div class="mb-8 flex flex-wrap items-center gap-1 px-2">
   <span
     class="flex items-center gap-2 {textColorBasedOnIdentity(
       getOpposingTeam(gameState.game!.currentTurn)
