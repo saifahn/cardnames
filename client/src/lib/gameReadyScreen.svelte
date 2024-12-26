@@ -4,6 +4,8 @@
   import { getOpposingTeam } from '../../../shared/getOpposingTeam';
   import TeamLogo from './teamLogo.svelte';
   import InlineTeamLogo from './inlineTeamLogo.svelte';
+  import OperativePic from '$lib/assets/dhund-operative-crop.jpg';
+  import SpymasterPic from '$lib/assets/goblin-spymaster-crop.jpg';
 
   const { spymasterView = false } = $props();
 </script>
@@ -78,6 +80,12 @@
       >{spymasterView ? 'a Spymaster' : 'an Operative'}</span
     >
   </p>
+  <img
+    src={spymasterView ? SpymasterPic : OperativePic}
+    alt="role picture"
+    aria-hidden="true"
+    class="mb-4 max-w-80"
+  />
   {#if spymasterView}
     <p>
       If you will play as an operative this round, <a
